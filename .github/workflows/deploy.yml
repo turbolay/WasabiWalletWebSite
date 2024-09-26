@@ -20,3 +20,13 @@ jobs:
           chmod 600 deploy_key
           scp -i deploy_key -o StrictHostKeyChecking=no -r wwwroot/* ${{ secrets.DEPLOY_PRODUCTION_USER }}@${{ secrets.DEPLOY_PRODUCTION_IP }}:/var/www/html/
           rm deploy_key
+          
+      - name: copy file via ssh key
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_PRODUCTION_IP }}
+          username: ${{ secrets.DEPLOY_PRODUCTION_USER }}
+          port: 22
+          key: ${{ secrets.DEPLOY_PRODUCTION_SSH_KEY }}
+          source: "wwwroot/*"
+          target: /var/www/html/
