@@ -21,5 +21,6 @@ jobs:
           username: ${{ secrets.DEPLOY_PRODUCTION_USER }}
           port: 22
           key: ${{ secrets.DEPLOY_PRODUCTION_SSH_KEY }}
+          passphrase: ${{ secrets.DEPLOY_PRODUCTION_SSH_KEY_PASSPHRASE }}
           source: "wwwroot/*"
           target: /var/www/html/
