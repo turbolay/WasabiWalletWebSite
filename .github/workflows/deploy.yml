@@ -13,14 +13,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Deploy to Server
-        run: |
-          echo ${{ secrets.DEPLOY_PRODUCTION_SSH_KEY }} | base64 -d > deploy_key
-          chmod 600 deploy_key
-          scp -i deploy_key -o StrictHostKeyChecking=no -r wwwroot/* ${{ secrets.DEPLOY_PRODUCTION_USER }}@${{ secrets.DEPLOY_PRODUCTION_IP }}:/var/www/html/
-          rm deploy_key
-          
+        
       - name: copy file via ssh key
         uses: appleboy/scp-action@v0.1.7
         with:
