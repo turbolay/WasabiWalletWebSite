@@ -1,0 +1,26 @@
+name: Deploy to Server
+on:
+  push:
+    branches:
+      - master
+  repository_dispatch:
+    types: [ deploy-to-server ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Server
+        env:
+          DEPLOY_PRODUCTION_IP: ${{ secrets.DEPLOY_PRODUCTION_IP }}
+          DEPLOY_PRODUCTION_USER: ${{ secrets.DEPLOY_PRODUCTION_USER }}
+          DEPLOY_PRODUCTION_SSH_KEY: ${{ secrets.DEPLOY_PRODUCTION_SSH_KEY }}
+        run: |
+          echo "$DEPLOY_PRODUCTION_SSH_KEY" | base64 -d > deploy_key
+          chmod 600 deploy_key
+          scp -i deploy_key -o StrictHostKeyChecking=no -r wwwroot/* $DEPLOY_PRODUCTION_USER@$DEPLOY_PRODUCTION_IP:/var/www/html/
+          rm deploy_key
